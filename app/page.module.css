@@ -1,0 +1,10 @@
+.description {
+  padding: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* first column twice as wide */
+  gap: 20px; /* space between columns */
+  padding: 20px;
+}

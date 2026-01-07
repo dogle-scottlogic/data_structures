@@ -1,10 +1,11 @@
 /* 1️⃣ Import Tailwind and fonts first */
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto+Mono&display=swap');
+@import 'tailwindcss';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 2️⃣ Root CSS variables for colors and fonts */
+/* 2️⃣ Root CSS variables for colours and fonts */
 :root {
   --color-background: #121212; /* Dark gray background */
   --color-foreground: #e0e0e0; /* Light gray text */
@@ -49,7 +50,8 @@
   h6 {
     font-family: var(--font-heading);
     color: var(--color-primary);
-    margin: 0;
+    padding: 5px;
+    margin: 5px;
   }
 
   a {
