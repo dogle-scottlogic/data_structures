@@ -1,3 +1,3 @@
-interface Structures {
-    structures: string[];
-} 
+export interface Structures {
+  structures: string[];
+}
