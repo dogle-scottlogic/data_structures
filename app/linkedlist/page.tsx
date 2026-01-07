@@ -1,7 +1,9 @@
+import Header from "../header";
+
 export default function LinkedList() {
     return (
         <>
-            <h1>Linked List</h1>
+            <Header>Linked List</Header>
         </>
     );
 }

@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { normaliseUrl } from './utils/routes';
+import { Structures } from './types/main';
+import Header from './header';
 
 export default function Home({ structures }: Structures) {
     return (
         <>
-            <h1>Data Structures</h1>
+            <Header>Data Structures</Header>
             <ul>
                 {structures.map(d =>
                     <li key={d}>

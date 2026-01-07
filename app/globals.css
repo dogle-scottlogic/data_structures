@@ -1,26 +1,94 @@
-@import "tailwindcss";
+/* 1️⃣ Import Tailwind and fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto+Mono&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* 2️⃣ Root CSS variables for colors and fonts */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-background: #121212; /* Dark gray background */
+  --color-foreground: #e0e0e0; /* Light gray text */
+  --color-primary: #ff6f61; /* Coral for headings/highlights */
+  --color-accent: #ffd166; /* Soft yellow accent */
+  --color-card: #1e1e2e; /* Card background */
+
+  --font-heading: 'Fira Code', monospace;
+  --font-body: 'Roboto Mono', monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* 3️⃣ Optional: Light mode override */
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-background: #ffffff;
+    --color-foreground: #171717;
+    --color-primary: #ff6f61;
+    --color-accent: #ffd166;
+    --color-card: #f0f0f0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 4️⃣ Base styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  a:hover {
+    color: var(--color-accent);
+  }
+
+  code {
+    font-family: var(--font-body);
+    background-color: var(--color-card);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    color: var(--color-foreground);
+  }
+
+  /* Optional: card style */
+  .card {
+    background-color: var(--color-card);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  button {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-family: var(--font-heading);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  button:hover {
+    background-color: var(--color-accent);
+  }
 }
