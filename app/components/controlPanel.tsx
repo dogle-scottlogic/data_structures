@@ -1,6 +1,11 @@
-export default function ControlPanel() {
-    return (<div className="control">
-        <button>Add</button>
-        <button>Delete</button>
-    </div>)
+import { ControlPanelProps } from 'types/controlPanel'
+import styles from './controlPanel.module.css'
+
+export default function ControlPanel({ addNode, deleteNode }: ControlPanelProps) {
+    return (
+        <div className={styles.control}>
+            <button onClick={addNode}>Add</button>
+            <button onClick={deleteNode}>Delete</button>
+        </div>
+    )
 }

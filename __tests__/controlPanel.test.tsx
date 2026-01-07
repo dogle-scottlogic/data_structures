@@ -4,7 +4,7 @@ import ControlPanel from 'components/controlPanel'
 
 describe('ControlPanel', () => {
     it('renders two buttons', () => {
-        const jsx = ControlPanel()
+        const jsx = ControlPanel({ addNode: () => null, deleteNode: () => null })
         render(jsx)
         const buttonOne = screen.getByRole('button', { name: "Add" })
         expect(buttonOne).toBeInTheDocument()

@@ -1,0 +1,9 @@
+.control {
+  color: white;
+  background-color: var(--color-card);
+  border: 1px solid white;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}

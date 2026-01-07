@@ -14,4 +14,12 @@ export interface DrawingContext {
   beginPath: () => unknown;
   arc: (x: number, y: number, z: number, w: number, h: number) => unknown;
   fill: () => unknown;
+  font: string;
+  textAlign: string;
+  fillText: (a: string, b: number, c: number) => unknown;
+  textBaseline: string;
+  strokeStyle: string;
+  moveTo: (x: number, y: number) => unknown;
+  lineTo: (x: number, y: number) => unknown;
+  stroke: () => unknown;
 }
