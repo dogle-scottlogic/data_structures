@@ -1,9 +1,9 @@
-import { normaliseUrl } from "@/app/utils/routes"
+import { normaliseUrl } from 'utils/routes';
 
 describe('normaliseUrl', () => {
-    it('normalises a url', () => {
-        const pathString = "Linked List"
-        const result = normaliseUrl(pathString);
-        expect(result).toBe("linkedlist")
-    })
-})
+  it('normalises a url', () => {
+    const pathString = 'Linked List';
+    const result = normaliseUrl(pathString);
+    expect(result).toBe('linkedlist');
+  });
+});

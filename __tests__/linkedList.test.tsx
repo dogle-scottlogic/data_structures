@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import LinkedList from '../app/linkedlist/page'
+import LinkedList from 'linkedlist/page'
 
 describe('Home', () => {
     it('renders a heading', () => {

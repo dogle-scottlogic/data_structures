@@ -1,9 +1,9 @@
 'use-client'
 
 import Link from 'next/link'
-import { normaliseUrl } from './utils/routes';
-import { Structures } from './types/main';
-import Header from './header';
+import { normaliseUrl } from 'utils/routes';
+import { Structures } from 'types/main';
+import Header from 'components/header';
 
 export default function Home({ structures }: Structures) {
     return (
