@@ -1,0 +1,3 @@
+interface Structures {
+    structures: string[];
+} 
