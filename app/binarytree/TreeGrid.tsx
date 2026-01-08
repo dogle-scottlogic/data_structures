@@ -5,18 +5,46 @@ import Grid from "components/grid"
 import { OptionalTreeNode, TreeNode } from "types/node"
 import { drawBST } from "utils/drawTree"
 
-const seen = new Set();
-
 export default function TreeGrid() {
+    const generateValue = (range: number) => Math.floor(Math.random() * range)
     const initialNode: TreeNode = { value: 20, left: null, right: null }
-    seen.add(20);
+    const initialSet = () => { const set = new Set<number>(); set.add(initialNode.value); return set; };
     const [head, setHead] = useState<OptionalTreeNode>(initialNode)
+    const [nodeSet, setNodeSet] = useState<Set<number>>(initialSet())
+
+    function newValue(): number {
+        const randomGenerator = () => generateValue(100);
+        let newValue = randomGenerator();
+        while (nodeSet.has(newValue)) {
+            newValue = randomGenerator();
+        }
+        nodeSet.add(newValue)
+        setNodeSet(nodeSet);
+        return newValue;
+    }
+
+    // Random delete a value for now
+    function valueToDelete(): number {
+        const randomIndexNumber = generateValue(nodeSet.size);
+        const setValues = nodeSet.values()
+        const valueToDelete = setValues.find((v, i) => i == randomIndexNumber) || 0;
+        nodeSet.delete(valueToDelete)
+        setNodeSet(nodeSet)
+        return valueToDelete;
+    }
+
     const addToTree = () => {
         const value = newValue();
         setHead(h => addNode(h, value));
     }
-    const removeFromTree = () => null
+
+    const removeFromTree = () => {
+        const value = valueToDelete();
+        setHead(h => deleteNode(h, value));
+    }
+
     const reset = () => setHead(() => null)
+
     return (
         <Grid draw={drawBST(head)} addNode={addToTree} deleteNode={removeFromTree} reset={reset} />
     )
@@ -82,30 +110,10 @@ function deleteNode(current: OptionalTreeNode, value: number): OptionalTreeNode 
     return current;
 }
 
-// Recursively clone nodes and append the new node at the end
-// function appendNode(node: ListNode, newNode: ListNode): ListNode {
-//     if (!node.next) return { ...node, next: newNode }
-//     return { ...node, next: appendNode(node.next, newNode) }
-// }
-
-function newValue(): number {
-    const generateValue = () => Math.floor(Math.random() * 100)
-    let newValue = generateValue();
-    while (seen.has(newValue)) {
-        newValue = generateValue();
-    }
-    seen.add(newValue)
-    return newValue;
-}
-
 function newNode(value: number): TreeNode {
     return {
         value,
         left: null,
         right: null
     }
-}
-
-function isLeft(node: TreeNode, value: number): boolean {
-    return node.value <= value
 }

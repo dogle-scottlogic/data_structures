@@ -6,7 +6,6 @@ import useCanvas from 'hooks/useCanvas'
 describe('useCanvas hook', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   let rafCallbacks: Function[]
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let rafSpy: jest.SpyInstance
   let cafSpy: jest.SpyInstance
 
@@ -79,7 +78,9 @@ describe('useCanvas hook', () => {
   it('does nothing if canvasRef.current is null', () => {
     const draw = jest.fn()
 
-    const TestComponent = ({ }: { draw: jest.Mock }) => {
+    const TestComponent = ({ draw }: { draw: jest.Mock }) => {
+      useCanvas(draw)
+      // leave ref.current as null
       return null
     }
 
