@@ -1,4 +1,4 @@
-import { ListNode } from 'types/list';
+import { ListNode } from '@/types/node';
 import { DrawingContext } from 'types/canvas';
 
 // Linear interpolation helper

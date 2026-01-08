@@ -1,13 +1,13 @@
 'use client';
 
-import { ListNode } from 'types/list';
+import { ListNode, OptionalListNode } from 'types/node';
 import { useState } from 'react';
 import { drawList } from 'utils/drawList';
 import Grid from 'components/grid';
 
 export default function StackGrid() {
   const initialNode: ListNode = { value: 1, next: null };
-  const [head, setHead] = useState<ListNode | null>(initialNode);
+  const [head, setHead] = useState<OptionalListNode>(initialNode);
 
   const drawFunctions = drawList(head);
   const updateExitingNode = drawFunctions.updateExitingNode;
@@ -26,7 +26,7 @@ export default function StackGrid() {
   );
 }
 
-function pushNode(front: ListNode | null): ListNode {
+function pushNode(front: OptionalListNode): ListNode {
   const newNode: ListNode = { value: nextValue(front), next: null };
   if (!front) return newNode;
   newNode.next = front;
@@ -34,16 +34,16 @@ function pushNode(front: ListNode | null): ListNode {
 }
 
 function popNode(
-  front: ListNode | null,
+  front: OptionalListNode,
   updateExitingNode: (exitingNode: ListNode, x: number) => void
-): ListNode | null {
+): OptionalListNode {
   if (!front) return null;
   updateExitingNode(front, 80);
   return front.next;
 }
 
 // Determine the next value for a new node
-function nextValue(front: ListNode | null): number {
+function nextValue(front: OptionalListNode): number {
   if (front == null) {
     return 1;
   }

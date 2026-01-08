@@ -1,7 +1,7 @@
 export type Draw = (ctx: DrawingContext, frameCount: number) => void;
 
 export interface Canvas {
-  getContext: (contextAttribute: '2d') => DrawingContext;
+  getContext: (contextAttribute: "2d") => DrawingContext;
   width: number;
   height: number;
 }
@@ -22,4 +22,13 @@ export interface DrawingContext {
   moveTo: (x: number, y: number) => unknown;
   lineTo: (x: number, y: number) => unknown;
   stroke: () => unknown;
+  strokeRect: (a: number, b: number, c: number, d: number) => null;
+  setTransform: (
+    scale: number,
+    x: number,
+    y: number,
+    z: number,
+    offsetX: number,
+    offsetY: number
+  ) => void;
 }

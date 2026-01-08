@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import Grid from "components/grid"
-import { ListNode } from "types/list"
+import { ListNode, OptionalListNode } from "types/node"
 import { drawList } from "utils/drawList"
 
 export default function QueueGrid() {
     const initialNode: ListNode = { value: 1, next: null }
-    const [head, setHead] = useState<ListNode | null>(initialNode)
+    const [head, setHead] = useState<OptionalListNode>(initialNode)
 
     const drawFunctions = drawList(head);
     const updateExitingNode = drawFunctions.updateExitingNode
@@ -21,13 +21,13 @@ export default function QueueGrid() {
     )
 }
 
-function enqueueNode(front: ListNode | null): ListNode {
+function enqueueNode(front: OptionalListNode): ListNode {
     const newNode: ListNode = { value: nextValue(front), next: null }
     if (!front) return newNode
     return { ...front, next: front.next ? appendNode(front.next, newNode) : newNode }
 }
 
-function dequeueNode(front: ListNode | null, updateExitingNode: (exitingNode: ListNode, x: number) => void): ListNode | null {
+function dequeueNode(front: OptionalListNode, updateExitingNode: (exitingNode: ListNode, x: number) => void): OptionalListNode {
     if (!front) return null
     updateExitingNode(front, 80)
     return front.next
@@ -40,7 +40,7 @@ function appendNode(node: ListNode, newNode: ListNode): ListNode {
 }
 
 // Determine the next value for a new node
-function nextValue(front: ListNode | null): number {
+function nextValue(front: OptionalListNode): number {
     let current = front
     let value = 1
     while (current) {
