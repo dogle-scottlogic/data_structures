@@ -3,13 +3,13 @@
 import { useState } from "react"
 import Grid from "components/grid"
 import { ListNode } from "types/list"
-import { drawQueue } from "queue/drawing"
+import { drawList } from "utils/drawList"
 
 export default function QueueGrid() {
     const initialNode: ListNode = { value: 1, next: null }
     const [head, setHead] = useState<ListNode | null>(initialNode)
 
-    const drawFunctions = drawQueue(head);
+    const drawFunctions = drawList(head);
     const updateExitingNode = drawFunctions.updateExitingNode
 
     const enqueue = () => setHead(h => enqueueNode(h))
@@ -30,8 +30,6 @@ function enqueueNode(front: ListNode | null): ListNode {
 function dequeueNode(front: ListNode | null, updateExitingNode: (exitingNode: ListNode, x: number) => void): ListNode | null {
     if (!front) return null
     updateExitingNode(front, 80)
-    // exitingNode = front
-    // exitingX = 80 // start at visible front for clarity
     return front.next
 }
 

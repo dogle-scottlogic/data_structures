@@ -56,7 +56,7 @@ export function drawLabel(
   ctx.fillText(text, x, y + offsetY);
 }
 
-export function drawQueue(frontNode: ListNode | null) {
+export function drawList(frontNode: ListNode | null) {
   const nodePositions = new WeakMap<ListNode, number>();
   let exitingNode: ListNode | null = null;
   let exitingX = 0;
