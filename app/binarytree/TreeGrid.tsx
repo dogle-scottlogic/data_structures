@@ -11,18 +11,12 @@ export default function TreeGrid() {
     const initialNode: TreeNode = { value: 20, left: null, right: null }
     seen.add(20);
     const [head, setHead] = useState<OptionalTreeNode>(initialNode)
-
-    // const drawFunctions = drawBST(head);
-    // const updateExitingNode = drawFunctions.updateExitingNode
-
     const addToTree = () => {
         const value = newValue();
         setHead(h => addNode(h, value));
     }
     const removeFromTree = () => null
-    // const dequeue = () => setHead(h => dequeueNode(h, updateExitingNode))
-    const reset = () => setHead(null)
-
+    const reset = () => setHead(() => null)
     return (
         <Grid draw={drawBST(head)} addNode={addToTree} deleteNode={removeFromTree} reset={reset} />
     )
@@ -33,17 +27,19 @@ function addNode(current: OptionalTreeNode, value: number): TreeNode {
         return newNode(value);
     }
 
-    if (isLeft(current, value)) {
-        current.left = addNode(current.left, value)
+    if (value <= current.value) {
+        return {
+            ...current,
+            left: addNode(current.left, value)
+        };
     } else {
-        current.right = addNode(current.right, value)
+        return {
+            ...current,
+            right: addNode(current.right, value)
+        };
     }
-    return current
-
-    // const newNode: ListNode = { value: nextValue(front), next: null }
-    // if (!front) return newNode
-    // return { ...front, next: front.next ? appendNode(front.next, newNode) : newNode }
 }
+
 
 function deleteNode(current: OptionalTreeNode, value: number): OptionalTreeNode {
     if (current == null) {

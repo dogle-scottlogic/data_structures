@@ -53,6 +53,8 @@ export function drawBST(root: OptionalTreeNode) {
   const nodePositions = new WeakMap<TreeNode, number>();
 
   return function draw(ctx: DrawingContext) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     if (!root) return;
 
     const NODE_RADIUS = 20;
@@ -101,7 +103,6 @@ export function drawBST(root: OptionalTreeNode) {
       top: Infinity,
       bottom: -Infinity,
     };
-
     nodes.forEach((n) => {
       bounds.left = Math.min(bounds.left, n.x - n.radius);
       bounds.right = Math.max(bounds.right, n.x + n.radius);
