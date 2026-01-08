@@ -1,4 +1,4 @@
-import { OptionalTreeNode, TreeNode } from "@/types/node";
+import { OptionalTreeNode, TreeNode } from "types/node";
 import { DrawingContext } from "types/canvas";
 
 // Linear interpolation helper for smooth animation

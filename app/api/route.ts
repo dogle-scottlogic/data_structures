@@ -1,6 +1,6 @@
-import { Structures } from 'types/main';
+import { Structures } from "types/main";
 
-const supportedStructures = ['Queue', 'Stack', 'Binary Tree'];
+const supportedStructures = ["Queue", "Stack", "Binary Tree"];
 
 export async function GET(): Promise<Response> {
   const structures: Structures = { structures: supportedStructures };

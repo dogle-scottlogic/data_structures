@@ -1,51 +1,62 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Grid from "components/grid"
-import { ListNode, OptionalListNode } from "types/node"
-import { drawList } from "utils/drawList"
+import { useState } from "react";
+import Grid from "components/grid";
+import { ListNode, OptionalListNode } from "types/node";
+import { drawList } from "utils/drawList";
 
 export default function QueueGrid() {
-    const initialNode: ListNode = { value: 1, next: null }
-    const [head, setHead] = useState<OptionalListNode>(initialNode)
+  const initialNode: ListNode = { value: 1, next: null };
+  const [head, setHead] = useState<OptionalListNode>(initialNode);
 
-    const drawFunctions = drawList(head);
-    const updateExitingNode = drawFunctions.updateExitingNode
+  const drawFunctions = drawList(head);
+  const updateExitingNode = drawFunctions.updateExitingNode;
 
-    const enqueue = () => setHead(h => enqueueNode(h))
-    const dequeue = () => setHead(h => dequeueNode(h, updateExitingNode))
-    const reset = () => setHead(null)
+  const enqueue = () => setHead((h) => enqueueNode(h));
+  const dequeue = () => setHead((h) => dequeueNode(h, updateExitingNode));
+  const reset = () => setHead(null);
 
-    return (
-        <Grid draw={drawFunctions.draw} addNode={enqueue} deleteNode={dequeue} reset={reset} />
-    )
+  return (
+    <Grid
+      draw={drawFunctions.draw}
+      addNode={enqueue}
+      deleteNode={dequeue}
+      reset={reset}
+    />
+  );
 }
 
 function enqueueNode(front: OptionalListNode): ListNode {
-    const newNode: ListNode = { value: nextValue(front), next: null }
-    if (!front) return newNode
-    return { ...front, next: front.next ? appendNode(front.next, newNode) : newNode }
+  const newNode: ListNode = { value: nextValue(front), next: null };
+  if (!front) return newNode;
+  return {
+    ...front,
+    next: front.next ? appendNode(front.next, newNode) : newNode,
+  };
 }
 
-function dequeueNode(front: OptionalListNode, updateExitingNode: (exitingNode: ListNode, x: number) => void): OptionalListNode {
-    if (!front) return null
-    updateExitingNode(front, 80)
-    return front.next
+function dequeueNode(
+  front: OptionalListNode,
+  updateExitingNode: (exitingNode: ListNode, x: number) => void
+): OptionalListNode {
+  if (!front) return null;
+  updateExitingNode(front, 80);
+  return front.next;
 }
 
 // Recursively clone nodes and append the new node at the end
 function appendNode(node: ListNode, newNode: ListNode): ListNode {
-    if (!node.next) return { ...node, next: newNode }
-    return { ...node, next: appendNode(node.next, newNode) }
+  if (!node.next) return { ...node, next: newNode };
+  return { ...node, next: appendNode(node.next, newNode) };
 }
 
 // Determine the next value for a new node
 function nextValue(front: OptionalListNode): number {
-    let current = front
-    let value = 1
-    while (current) {
-        value = current.value + 1
-        current = current.next
-    }
-    return value
+  let current = front;
+  let value = 1;
+  while (current) {
+    value = current.value + 1;
+    current = current.next;
+  }
+  return value;
 }

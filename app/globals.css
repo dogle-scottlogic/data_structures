@@ -1,6 +1,6 @@
 /* 1️⃣ Import Tailwind and fonts first */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto+Mono&display=swap');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto+Mono&display=swap");
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,8 +13,8 @@
   --color-accent: #ffd166; /* Soft yellow accent */
   --color-card: #1e1e2e; /* Card background */
 
-  --font-heading: 'Fira Code', monospace;
-  --font-body: 'Roboto Mono', monospace;
+  --font-heading: "Fira Code", monospace;
+  --font-body: "Roboto Mono", monospace;
 }
 
 /* 3️⃣ Optional: Light mode override */

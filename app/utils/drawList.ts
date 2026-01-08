@@ -1,5 +1,5 @@
-import { ListNode } from '@/types/node';
-import { DrawingContext } from 'types/canvas';
+import { ListNode } from "types/node";
+import { DrawingContext } from "types/canvas";
 
 // Linear interpolation helper
 const lerp = (current: number, target: number, factor: number) =>
@@ -13,7 +13,7 @@ export function drawArrow(
   spacing: number,
   r: number
 ) {
-  ctx.strokeStyle = '#000';
+  ctx.strokeStyle = "#000";
   ctx.lineWidth = 2;
 
   ctx.beginPath();
@@ -34,14 +34,14 @@ export function drawNode(
   y: number,
   radius: number,
   value: number,
-  color = '#db1010ff'
+  color = "#db1010ff"
 ) {
   ctx.fillStyle = color;
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = "#fff";
   ctx.fillText(String(value), x, y);
 }
 
@@ -52,7 +52,7 @@ export function drawLabel(
   y: number,
   offsetY: number
 ) {
-  ctx.fillStyle = '#000';
+  ctx.fillStyle = "#000";
   ctx.fillText(text, x, y + offsetY);
 }
 
@@ -75,8 +75,8 @@ export function drawList(frontNode: ListNode | null) {
         // Slide left smoothly
         exitingX = lerp(exitingX, -NODE_RADIUS * 2, 0.2);
 
-        drawNode(ctx, exitingX, Y, NODE_RADIUS, exitingNode.value, '#ff9900');
-        drawLabel(ctx, 'Dequeued', exitingX, Y, -35);
+        drawNode(ctx, exitingX, Y, NODE_RADIUS, exitingNode.value, "#ff9900");
+        drawLabel(ctx, "Dequeued", exitingX, Y, -35);
 
         // Remove when fully offscreen
         if (exitingX < -NODE_RADIUS * 2) exitingNode = null;
@@ -94,9 +94,9 @@ export function drawList(frontNode: ListNode | null) {
       const maxVisibleWidth = ctx.canvas.width - START_X - NODE_RADIUS * 2;
       const offsetX = Math.max(0, totalWidth - maxVisibleWidth);
 
-      ctx.font = '14px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      ctx.font = "14px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
 
       // -------- Draw each node --------
       nodes.forEach((node, index) => {
@@ -112,9 +112,9 @@ export function drawList(frontNode: ListNode | null) {
         if (index < nodes.length - 1)
           drawArrow(ctx, x, Y, SPACING, NODE_RADIUS);
 
-        if (index === 0) drawLabel(ctx, 'Front', x, Y, -35);
+        if (index === 0) drawLabel(ctx, "Front", x, Y, -35);
         if (index === nodes.length - 1 && index > 0)
-          drawLabel(ctx, 'Rear', x, Y, -35);
+          drawLabel(ctx, "Rear", x, Y, -35);
       });
     },
     updateExitingNode: (en: ListNode, x: number) => {

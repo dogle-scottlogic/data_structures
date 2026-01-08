@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { ListNode, OptionalListNode } from 'types/node';
-import { useState } from 'react';
-import { drawList } from 'utils/drawList';
-import Grid from 'components/grid';
+import { ListNode, OptionalListNode } from "types/node";
+import { useState } from "react";
+import { drawList } from "utils/drawList";
+import Grid from "components/grid";
 
 export default function StackGrid() {
   const initialNode: ListNode = { value: 1, next: null };
