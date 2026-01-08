@@ -42,6 +42,17 @@
     padding: 0;
   }
 
+  footer {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    font-size: small;
+    display: flex;
+    justify-content: center;
+  }
+
   h1,
   h2,
   h3,
