@@ -1,4 +1,4 @@
-import { ListNode } from "types/node";
+import { ListNode, OptionalListNode } from "types/node";
 import { DrawingContext } from "types/canvas";
 
 // Linear interpolation helper
@@ -56,9 +56,9 @@ export function drawLabel(
   ctx.fillText(text, x, y + offsetY);
 }
 
-export function drawList(frontNode: ListNode | null) {
+export function drawList(frontNode: OptionalListNode) {
   const nodePositions = new WeakMap<ListNode, number>();
-  let exitingNode: ListNode | null = null;
+  let exitingNode: OptionalListNode = null;
   let exitingX = 0;
   return {
     draw: function draw(ctx: DrawingContext) {
