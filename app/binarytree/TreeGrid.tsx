@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Grid from "components/grid";
 import { drawBST } from "utils/drawTree";
-import { OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
+import { newTreeNode, OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
 
 export default function TreeGrid() {
   const generateValue = (range: number) => Math.floor(Math.random() * range);
-  const initialNode: TreeNode = new TreeNode(20);
+  const initialNode: TreeNode = newTreeNode(20);
   const initialSet = () => {
     const set = new Set<number>();
     set.add(initialNode.value);
@@ -61,9 +61,9 @@ export default function TreeGrid() {
 
 function addNode(current: OptionalTreeNode, value: number): TreeNode {
   if (current == null) {
-    return new TreeNode(value);
+    return newTreeNode(value);
   }
-  const newNode = current.clone();
+  const newNode = { ...current };
   if (value <= current.value) {
     newNode.left = addNode(current.left, value);
     return newNode;

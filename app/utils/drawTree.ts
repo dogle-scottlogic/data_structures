@@ -1,3 +1,4 @@
+import { RedBlackTreeNode } from "@/redblacktree/RedBlackTreeNode";
 import { OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
 import { DrawingContext } from "types/canvas";
 
@@ -143,7 +144,8 @@ export function drawBST(root: OptionalTreeNode) {
       }
 
       // Draw node last (on top)
-      ctx.fillStyle = "#db1010ff";
+      console.log(node.getFillColour());
+      ctx.fillStyle = node.getFillColour();
       ctx.beginPath();
       ctx.arc(x, y, NODE_RADIUS, 0, Math.PI * 2);
       ctx.fill();

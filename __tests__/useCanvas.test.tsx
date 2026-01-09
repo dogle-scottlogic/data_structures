@@ -22,7 +22,7 @@ describe("useCanvas hook", () => {
 
     cafSpy = jest
       .spyOn(window, "cancelAnimationFrame")
-      .mockImplementation(() => { });
+      .mockImplementation(() => {});
   });
 
   afterEach(() => {
