@@ -1,4 +1,4 @@
-import { TreeNode } from "binarytree/TreeNode";
+import { TreeNode } from "BinaryTree/treeNode";
 
 type Colour = "BLACK" | "RED";
 export type Direction = "LEFT" | "RIGHT";

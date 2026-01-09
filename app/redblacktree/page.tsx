@@ -3,12 +3,12 @@ import styles from "page.module.css";
 import Header from "components/header";
 import Description from "components/description";
 import Link from "next/link";
-import RedBlackTreeGrid from "./redBlackTreeGrid";
+import RedBlackTreeGrid from "RedBlackTree/redBlackTreeGrid";
 
 export default function BinaryTree() {
   return (
     <div className={styles.page}>
-      <Header>Binary Tree</Header>
+      <Header>Red / Black Binary Tree</Header>
       <Description>
         In computer science, a red–black tree is a self-balancing binary search
         tree data structure noted for fast storage and retrieval of ordered

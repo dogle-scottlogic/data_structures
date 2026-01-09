@@ -7,7 +7,7 @@ import {
   newRedBlackTreeNode,
   OptionalRedBlackTreeNode,
   RedBlackTreeNode,
-} from "redblacktree/RedBlackTreeNode";
+} from "RedBlackTree/redBlackTreeNode";
 import { newValue, valueToDelete } from "utils/tree";
 
 export default function RedBlackTreeGrid() {
@@ -15,19 +15,19 @@ export default function RedBlackTreeGrid() {
   const initialSet = () => new Set<number>([initialNode.value]);
 
   const [head, setHead] = useState<OptionalRedBlackTreeNode>(initialNode);
-  const [nodeSet, setNodeSet] = useState<Set<number>>(initialSet());
+  const [seenNumbers, setSeenNumbers] = useState<Set<number>>(initialSet());
 
   const addToTree = () => {
-    const value = newValue(nodeSet);
-    nodeSet.add(value);
-    setNodeSet(new Set(nodeSet));
+    const value = newValue()(seenNumbers);
+    seenNumbers.add(value);
+    setSeenNumbers(new Set(seenNumbers));
     setHead((h) => insert(h, newRedBlackTreeNode(value)));
   };
 
   const removeFromTree = () => {
-    const value = valueToDelete(nodeSet);
-    nodeSet.delete(value);
-    setNodeSet(new Set(nodeSet));
+    const value = valueToDelete()(seenNumbers);
+    seenNumbers.delete(value);
+    setSeenNumbers(new Set(seenNumbers));
     setHead((h) => deleteNode(h, value));
   };
 

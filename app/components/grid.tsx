@@ -8,7 +8,7 @@ import { GridProps } from "types/grid";
 
 export default function Grid({ draw, addNode, deleteNode, reset }: GridProps) {
   return (
-    <div className={styles.grid}>
+    <div className={styles.grid} data-testid="grid">
       <Canvas draw={draw} />
       <ControlPanel addNode={addNode} deleteNode={deleteNode} reset={reset} />
     </div>

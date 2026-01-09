@@ -2,7 +2,7 @@ import styles from "page.module.css";
 
 import Header from "components/header";
 import Description from "components/description";
-import QueueGrid from "queue/QueueGrid";
+import QueueGrid from "Queue/queueGrid";
 import Link from "next/link";
 
 export default function Queue() {

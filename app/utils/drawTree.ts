@@ -1,4 +1,4 @@
-import { OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
+import { OptionalTreeNode, TreeNode } from "@/BinaryTree/treeNode";
 import { DrawingContext } from "types/canvas";
 
 // Linear interpolation helper for smooth animation
@@ -131,19 +131,18 @@ export function drawBST(root: OptionalTreeNode) {
         const childY = (depth + 1) * LEVEL_HEIGHT + NODE_RADIUS + 20;
 
         drawLine(ctx, x, y, childX, childY);
-        drawTree(node.left, depth + 1, xMin, targetX);
       }
+      drawTree(node.left, depth + 1, xMin, targetX);
 
       if (node.right) {
         const childX = nodePositions.get(node.right)!;
         const childY = (depth + 1) * LEVEL_HEIGHT + NODE_RADIUS + 20;
 
         drawLine(ctx, x, y, childX, childY);
-        drawTree(node.right, depth + 1, targetX, xMax);
       }
+      drawTree(node.right, depth + 1, targetX, xMax);
 
       // Draw node last (on top)
-      console.log(node.getFillColour());
       ctx.fillStyle = node.getFillColour();
       ctx.beginPath();
       ctx.arc(x, y, NODE_RADIUS, 0, Math.PI * 2);

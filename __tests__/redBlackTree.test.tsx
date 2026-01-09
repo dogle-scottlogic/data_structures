@@ -1,18 +1,20 @@
-import { insert } from "@/redblacktree/redBlackTreeGrid";
+import { deleteNode, insert } from "RedBlackTree/redBlackTreeGrid";
 import {
   newRedBlackTreeNode,
   RedBlackTreeNode,
-} from "@/redblacktree/RedBlackTreeNode";
+} from "RedBlackTree/redBlackTreeNode";
 
-describe("Red-Black Tree Insert", () => {
+describe("Red-Black Tree", () => {
   let tree: RedBlackTreeNode | null;
 
   beforeEach(() => {
-    tree = newRedBlackTreeNode(10); // start with single black root
-    tree.colour = "BLACK";
+    tree = newRedBlackTreeNode(10);
+    tree.colour = "BLACK"; // start with black root
   });
 
-  // Helper: check BST invariant
+  /** ------------------ Helpers ------------------ **/
+
+  // Check BST invariant
   function isBST(
     node: RedBlackTreeNode | null,
     min = -Infinity,
@@ -25,7 +27,7 @@ describe("Red-Black Tree Insert", () => {
     );
   }
 
-  // Helper: check red-black properties recursively
+  // Check no consecutive red nodes
   function noConsecutiveReds(node: RedBlackTreeNode | null): boolean {
     if (!node) return true;
     if (node.colour === "RED") {
@@ -39,31 +41,25 @@ describe("Red-Black Tree Insert", () => {
     return noConsecutiveReds(node.left) && noConsecutiveReds(node.right);
   }
 
-  test("insert nodes and maintain BST property", () => {
+  // Check parent pointers
+  function parentsCorrect(
+    node: RedBlackTreeNode | null,
+    parent: RedBlackTreeNode | null = null
+  ): boolean {
+    if (!node) return true;
+    if (node.parent !== parent) return false;
+    return parentsCorrect(node.left, node) && parentsCorrect(node.right, node);
+  }
+
+  /** ------------------ Insert Tests ------------------ **/
+
+  test("insert nodes maintain BST property", () => {
     const values = [5, 15, 3, 7, 12, 17];
-    values.forEach((v) => {
-      tree = insert(tree, newRedBlackTreeNode(v));
-    });
+    values.forEach((v) => (tree = insert(tree, newRedBlackTreeNode(v))));
 
     expect(tree).not.toBeNull();
     expect(isBST(tree)).toBe(true);
-  });
-
-  test("root is always black", () => {
-    const values = [1, 2, 3, 4, 5];
-    values.forEach((v) => {
-      tree = insert(tree, newRedBlackTreeNode(v));
-    });
-
     expect(tree!.colour).toBe("BLACK");
-  });
-
-  test("no consecutive red nodes", () => {
-    const values = [20, 15, 25, 10, 18, 22, 30];
-    values.forEach((v) => {
-      tree = insert(tree, newRedBlackTreeNode(v));
-    });
-
     expect(noConsecutiveReds(tree)).toBe(true);
   });
 
@@ -73,5 +69,66 @@ describe("Red-Black Tree Insert", () => {
     expect(tree).not.toBeNull();
     expect(isBST(tree)).toBe(true);
     expect(tree!.colour).toBe("BLACK");
+    expect(noConsecutiveReds(tree)).toBe(true);
+  });
+
+  /** ------------------ Deletion Tests ------------------ **/
+
+  test("delete a leaf node", () => {
+    const values = [10, 5, 15];
+    values.forEach((v) => (tree = insert(tree, newRedBlackTreeNode(v))));
+    tree = deleteNode(tree, 5);
+    expect(isBST(tree)).toBe(true);
+    expect(noConsecutiveReds(tree)).toBe(true);
+    expect(parentsCorrect(tree)).toBe(true);
+  });
+
+  test("delete node with one child", () => {
+    const values = [10, 5, 15, 12];
+    values.forEach((v) => (tree = insert(tree, newRedBlackTreeNode(v))));
+    tree = deleteNode(tree, 15);
+    expect(isBST(tree)).toBe(true);
+    expect(noConsecutiveReds(tree)).toBe(true);
+    expect(parentsCorrect(tree)).toBe(true);
+  });
+
+  test("delete node with two children", () => {
+    const values = [10, 5, 15, 12, 18];
+    values.forEach((v) => (tree = insert(tree, newRedBlackTreeNode(v))));
+    tree = deleteNode(tree, 15);
+    expect(isBST(tree)).toBe(true);
+    expect(noConsecutiveReds(tree)).toBe(true);
+    expect(parentsCorrect(tree)).toBe(true);
+  });
+
+  test("delete root node", () => {
+    const values = [10, 5, 15];
+    values.forEach((v) => (tree = insert(tree, newRedBlackTreeNode(v))));
+    tree = deleteNode(tree, 10);
+    expect(isBST(tree)).toBe(true);
+    expect(noConsecutiveReds(tree)).toBe(true);
+    expect(tree!.colour).toBe("BLACK");
+    expect(parentsCorrect(tree)).toBe(true);
+  });
+
+  test("delete multiple nodes in sequence", () => {
+    const values = [20, 10, 30, 5, 15, 25, 35];
+    values.forEach((v) => (tree = insert(tree, newRedBlackTreeNode(v))));
+    const toDelete = [5, 15, 25, 20];
+    toDelete.forEach((v) => {
+      tree = deleteNode(tree, v);
+      expect(isBST(tree)).toBe(true);
+      expect(noConsecutiveReds(tree)).toBe(true);
+      expect(parentsCorrect(tree)).toBe(true);
+    });
+  });
+
+  test("delete non-existent node does not break tree", () => {
+    const values = [10, 5, 15];
+    values.forEach((v) => (tree = insert(tree, newRedBlackTreeNode(v))));
+    tree = deleteNode(tree, 999); // node not in tree
+    expect(isBST(tree)).toBe(true);
+    expect(noConsecutiveReds(tree)).toBe(true);
+    expect(parentsCorrect(tree)).toBe(true);
   });
 });

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Grid from "components/grid";
 import { drawBST } from "utils/drawTree";
-import { newTreeNode, OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
+import { newTreeNode, OptionalTreeNode, TreeNode } from "BinaryTree/treeNode";
 import { newValue, valueToDelete } from "utils/tree";
 
 export default function TreeGrid() {
@@ -14,19 +14,19 @@ export default function TreeGrid() {
     return set;
   };
   const [head, setHead] = useState<OptionalTreeNode>(initialNode);
-  const [nodeSet, setNodeSet] = useState<Set<number>>(initialSet());
+  const [seenNumbers, setSeenNumbers] = useState<Set<number>>(initialSet());
 
   const addToTree = () => {
-    const value = newValue(nodeSet);
-    nodeSet.add(value);
-    setNodeSet(new Set(nodeSet));
+    const value = newValue()(seenNumbers);
+    seenNumbers.add(value);
+    setSeenNumbers(new Set(seenNumbers));
     setHead((h) => addNode(h, value));
   };
 
   const removeFromTree = () => {
-    const value = valueToDelete(nodeSet);
-    nodeSet.delete(value);
-    setNodeSet(new Set(nodeSet));
+    const value = valueToDelete()(seenNumbers);
+    seenNumbers.delete(value);
+    setSeenNumbers(new Set(seenNumbers));
     setHead((h) => deleteNode(h, value));
   };
 

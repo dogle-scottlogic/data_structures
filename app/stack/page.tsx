@@ -3,7 +3,7 @@ import styles from "page.module.css";
 import Header from "components/header";
 import Description from "components/description";
 import Link from "next/link";
-import StackGrid from "./StackGrid";
+import StackGrid from "Stack/stackGrid";
 
 export default function Stack() {
   return (

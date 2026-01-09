@@ -3,7 +3,7 @@ import styles from "page.module.css";
 import Header from "components/header";
 import Description from "components/description";
 import Link from "next/link";
-import TreeGrid from "binarytree/TreeGrid";
+import TreeGrid from "BinaryTree/treeGrid";
 
 export default function BinaryTree() {
   return (
