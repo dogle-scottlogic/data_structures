@@ -1,4 +1,3 @@
-import { RedBlackTreeNode } from "@/redblacktree/RedBlackTreeNode";
 import { OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
 import { DrawingContext } from "types/canvas";
 

@@ -8,29 +8,27 @@ import {
   OptionalRedBlackTreeNode,
   RedBlackTreeNode,
 } from "redblacktree/RedBlackTreeNode";
+import { newValue, valueToDelete } from "utils/tree";
 
 export default function RedBlackTreeGrid() {
-  const generateValue = (range: number) => Math.floor(Math.random() * range);
   const initialNode: RedBlackTreeNode = newRedBlackTreeNode(20);
   const initialSet = () => new Set<number>([initialNode.value]);
 
   const [head, setHead] = useState<OptionalRedBlackTreeNode>(initialNode);
   const [nodeSet, setNodeSet] = useState<Set<number>>(initialSet());
 
-  function newValue(): number {
-    let newVal = generateValue(100);
-    while (nodeSet.has(newVal)) newVal = generateValue(100);
-    setNodeSet((prev) => {
-      const newSet = new Set(prev);
-      newSet.add(newVal);
-      return newSet;
-    });
-    return newVal;
-  }
-
   const addToTree = () => {
-    const value = newValue();
+    const value = newValue(nodeSet);
+    nodeSet.add(value);
+    setNodeSet(new Set(nodeSet));
     setHead((h) => insert(h, newRedBlackTreeNode(value)));
+  };
+
+  const removeFromTree = () => {
+    const value = valueToDelete(nodeSet);
+    nodeSet.delete(value);
+    setNodeSet(new Set(nodeSet));
+    setHead((h) => deleteNode(h, value));
   };
 
   const reset = () => setHead(() => null);
@@ -39,7 +37,7 @@ export default function RedBlackTreeGrid() {
     <Grid
       draw={drawBST(head)}
       addNode={addToTree}
-      deleteNode={() => null}
+      deleteNode={removeFromTree}
       reset={reset}
     />
   );
@@ -121,7 +119,6 @@ function rotateLeft(head: RedBlackTreeNode): RedBlackTreeNode {
 }
 
 function rotateRight(head: RedBlackTreeNode): RedBlackTreeNode {
-  // assume h.left is non-null
   const pivotNode = head.left;
   if (!pivotNode) throw new Error("pivot node not found");
   const hPrime: RedBlackTreeNode = {
@@ -147,8 +144,6 @@ function flipColors(head: RedBlackTreeNode): RedBlackTreeNode {
   return { ...head, colour: "RED", left, right };
 }
 
-/* ---------- Parent-pointer fixer (run once after full rebuild) ---------- */
-
 function setParents(
   node: OptionalRedBlackTreeNode,
   parent: OptionalRedBlackTreeNode
@@ -164,4 +159,134 @@ function setParents(
   const leftFixed = setParents(node.left, copy);
   const rightFixed = setParents(node.right, copy);
   return { ...copy, left: leftFixed, right: rightFixed };
+}
+
+/* ------------------- Deletion ------------------- */
+
+function minNode(head: RedBlackTreeNode): RedBlackTreeNode {
+  let current: RedBlackTreeNode = head;
+  while (current.left) current = current.left;
+  return current;
+}
+
+/**
+ * deleteMin: remove minimum node from subtree h (assumes h non-null)
+ * returns new subtree root (possibly null)
+ */
+function deleteMinNode(head: RedBlackTreeNode): OptionalRedBlackTreeNode {
+  if (!head.left) {
+    return null;
+  }
+
+  let node = head;
+  if (!isRed(node.left) && !(node.left && isRed(node.left.left))) {
+    node = moveRedLeft(node);
+  }
+
+  const leftAfter = node.left ? deleteMinNode(node.left) : null;
+  node = { ...node, left: leftAfter ?? null };
+
+  return fixUp(node);
+}
+
+/**
+ * moveRedLeft: assumes head is red and both head.left and head.left.left are black.
+ * Makes left or left-left red.
+ */
+function moveRedLeft(head: RedBlackTreeNode): RedBlackTreeNode {
+  // flip colours to push a red down
+  let node = flipColors(head);
+  if (node.right && isRed(node.right.left)) {
+    const newRight = rotateRight(node.right);
+    node = { ...node, right: newRight };
+    node = rotateLeft(node);
+    node = flipColors(node);
+  }
+  return node;
+}
+
+/**
+ * moveRedRight: symmetric to moveRedLeft
+ */
+function moveRedRight(head: RedBlackTreeNode): RedBlackTreeNode {
+  let node = flipColors(head);
+  if (node.left && isRed(node.left.left)) {
+    node = rotateRight(node);
+    node = flipColors(node);
+  }
+  return node;
+}
+
+/**
+ * fixUp: restores left-leaning and balancing properties locally
+ */
+function fixUp(head: RedBlackTreeNode): RedBlackTreeNode {
+  let node = head;
+  if (isRed(node.right)) node = rotateLeft(node);
+  if (node.left && isRed(node.left) && isRed(node.left.left))
+    node = rotateRight(node);
+  if (isRed(node.left) && isRed(node.right)) node = flipColors(node);
+  return node;
+}
+
+function deleteRecursively(
+  optionalHead: OptionalRedBlackTreeNode,
+  value: number
+): OptionalRedBlackTreeNode {
+  if (!optionalHead) return null;
+
+  let head = optionalHead;
+
+  if (value < head.value) {
+    if (head.left) {
+      if (!isRed(head.left) && !(head.left.left && isRed(head.left.left))) {
+        head = moveRedLeft(head);
+      }
+      const newLeft = deleteRecursively(head.left, value);
+      head = { ...head, left: newLeft ?? null };
+    }
+  } else {
+    // If left is red, rotate right to make deletion easier
+    if (isRed(head.left)) {
+      head = rotateRight(head);
+    }
+
+    if (value === head.value && !head.right) {
+      // delete node with no right child
+      return null;
+    }
+
+    if (head.right) {
+      if (!isRed(head.right) && !(head.right.left && isRed(head.right.left))) {
+        head = moveRedRight(head);
+      }
+
+      if (value === head.value) {
+        // replace head with min from right subtree
+        const minimumNode = minNode(head.right!);
+        const rightAfter = deleteMinNode(head.right!);
+        head = { ...head, value: minimumNode.value, right: rightAfter ?? null };
+      } else {
+        const newRight = deleteRecursively(head.right, value);
+        head = { ...head, right: newRight ?? null };
+      }
+    }
+  }
+
+  return fixUp(head);
+}
+
+/**
+ * Wraps deleteRecursively, ensures root is black and sets parents
+ */
+export function deleteNode(
+  root: OptionalRedBlackTreeNode,
+  value: number
+): OptionalRedBlackTreeNode {
+  if (!root) return null;
+
+  const newRoot = deleteRecursively(root, value);
+  if (!newRoot) return null;
+  const blackRoot: RedBlackTreeNode = { ...newRoot, colour: "BLACK" };
+  return setParents(blackRoot, null);
 }

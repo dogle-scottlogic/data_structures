@@ -4,9 +4,9 @@ import { useState } from "react";
 import Grid from "components/grid";
 import { drawBST } from "utils/drawTree";
 import { newTreeNode, OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
+import { newValue, valueToDelete } from "utils/tree";
 
 export default function TreeGrid() {
-  const generateValue = (range: number) => Math.floor(Math.random() * range);
   const initialNode: TreeNode = newTreeNode(20);
   const initialSet = () => {
     const set = new Set<number>();
@@ -16,34 +16,17 @@ export default function TreeGrid() {
   const [head, setHead] = useState<OptionalTreeNode>(initialNode);
   const [nodeSet, setNodeSet] = useState<Set<number>>(initialSet());
 
-  function newValue(): number {
-    const randomGenerator = () => generateValue(100);
-    let newValue = randomGenerator();
-    while (nodeSet.has(newValue)) {
-      newValue = randomGenerator();
-    }
-    nodeSet.add(newValue);
-    setNodeSet(nodeSet);
-    return newValue;
-  }
-
-  // Random delete a value for now
-  function valueToDelete(): number {
-    const randomIndexNumber = generateValue(nodeSet.size);
-    const setValues = nodeSet.values();
-    const valueToDelete = setValues.find((v, i) => i == randomIndexNumber) || 0;
-    nodeSet.delete(valueToDelete);
-    setNodeSet(nodeSet);
-    return valueToDelete;
-  }
-
   const addToTree = () => {
-    const value = newValue();
+    const value = newValue(nodeSet);
+    nodeSet.add(value);
+    setNodeSet(new Set(nodeSet));
     setHead((h) => addNode(h, value));
   };
 
   const removeFromTree = () => {
-    const value = valueToDelete();
+    const value = valueToDelete(nodeSet);
+    nodeSet.delete(value);
+    setNodeSet(new Set(nodeSet));
     setHead((h) => deleteNode(h, value));
   };
 
