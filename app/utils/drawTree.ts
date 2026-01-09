@@ -1,38 +1,9 @@
-import { OptionalTreeNode, TreeNode } from "types/node";
+import { OptionalTreeNode, TreeNode } from "binarytree/TreeNode";
 import { DrawingContext } from "types/canvas";
 
 // Linear interpolation helper for smooth animation
 const lerp = (current: number, target: number, factor: number) =>
   current + (target - current) * factor;
-
-// Node class for drawing circles and numbers
-class Node {
-  x: number;
-  y: number;
-  radius: number;
-  value: number;
-  colour: string;
-  left?: Node;
-  right?: Node;
-
-  constructor(x: number, y: number, radius: number, value: number) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.value = value;
-    this.colour = "#db1010ff";
-  }
-
-  drawNode(ctx: DrawingContext) {
-    ctx.fillStyle = this.colour;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#fff";
-    ctx.fillText(String(this.value), this.x, this.y);
-  }
-}
 
 // Draw a line between two points
 function drawLine(
@@ -60,20 +31,31 @@ export function drawBST(root: OptionalTreeNode) {
     const NODE_RADIUS = 20;
     const LEVEL_HEIGHT = 100;
     const EASE = 0.15;
+    const PADDING = 20;
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // ---------------- Compute node positions ----------------
-    const nodes: Node[] = [];
+    const bounds = {
+      left: Infinity,
+      right: -Infinity,
+      top: Infinity,
+      bottom: -Infinity,
+    };
 
-    const computePositions = (
+    type DrawInfo = {
+      x: number;
+      y: number;
+    };
+
+    // ---------- PASS 1: compute positions + bounds ----------
+    const computeLayout = (
       node: OptionalTreeNode,
       depth: number,
       xMin: number,
       xMax: number
-    ): Node | undefined => {
-      if (!node) return undefined;
+    ): DrawInfo | null => {
+      if (!node) return null;
 
       const targetX = (xMin + xMax) / 2;
       const targetY = depth * LEVEL_HEIGHT + NODE_RADIUS + 20;
@@ -82,36 +64,22 @@ export function drawBST(root: OptionalTreeNode) {
       const x = lerp(currentX, targetX, EASE);
       nodePositions.set(node, x);
 
-      const newNode = new Node(x, targetY, NODE_RADIUS, node.value);
+      const y = targetY;
 
-      // Recursively compute children
-      if (node.left && newNode)
-        newNode.left = computePositions(node.left, depth + 1, xMin, targetX);
-      if (node.right && newNode)
-        newNode.right = computePositions(node.right, depth + 1, targetX, xMax);
+      bounds.left = Math.min(bounds.left, x - NODE_RADIUS);
+      bounds.right = Math.max(bounds.right, x + NODE_RADIUS);
+      bounds.top = Math.min(bounds.top, y - NODE_RADIUS);
+      bounds.bottom = Math.max(bounds.bottom, y + NODE_RADIUS);
 
-      nodes.push(newNode);
-      return newNode;
+      computeLayout(node.left, depth + 1, xMin, targetX);
+      computeLayout(node.right, depth + 1, targetX, xMax);
+
+      return { x, y };
     };
 
-    computePositions(root, 0, NODE_RADIUS, ctx.canvas.width - NODE_RADIUS);
+    computeLayout(root, 0, NODE_RADIUS, ctx.canvas.width - NODE_RADIUS);
 
-    // ---------------- Compute bounds for zoom ----------------
-    const bounds = {
-      left: Infinity,
-      right: -Infinity,
-      top: Infinity,
-      bottom: -Infinity,
-    };
-    nodes.forEach((n) => {
-      bounds.left = Math.min(bounds.left, n.x - n.radius);
-      bounds.right = Math.max(bounds.right, n.x + n.radius);
-      bounds.top = Math.min(bounds.top, n.y - n.radius);
-      bounds.bottom = Math.max(bounds.bottom, n.y + n.radius);
-    });
-
-    // Add padding
-    const PADDING = 20;
+    // Pad bounds
     bounds.left -= PADDING;
     bounds.right += PADDING;
     bounds.top -= PADDING;
@@ -133,30 +101,56 @@ export function drawBST(root: OptionalTreeNode) {
     const offsetY =
       (canvasHeight - shapesHeight * scale) / 2 - bounds.top * scale;
 
-    // ---------------- Apply transform ----------------
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
+    // ---------- APPLY TRANSFORM ----------
     ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
-
-    // Adjust line width and font size
     ctx.lineWidth = 2 / scale;
+
     const BASE_FONT = 14;
-    const MIN_FONT = 10;
-    const MAX_FONT = 18;
-
-    const fontSize = Math.max(MIN_FONT, Math.min(MAX_FONT, BASE_FONT / scale));
-
+    const fontSize = Math.max(10, Math.min(18, BASE_FONT / scale));
     ctx.font = `${fontSize}px sans-serif`;
     ctx.strokeStyle = "#000";
 
-    // ---------------- Draw connections ----------------
-    nodes.forEach((n) => {
-      if (n.left) drawLine(ctx, n.x, n.y, n.left.x, n.left.y);
-      if (n.right) drawLine(ctx, n.x, n.y, n.right.x, n.right.y);
-    });
+    // ---------- PASS 2: draw ----------
+    const drawTree = (
+      node: OptionalTreeNode,
+      depth: number,
+      xMin: number,
+      xMax: number
+    ) => {
+      if (!node) return;
 
-    // ---------------- Draw nodes ----------------
-    nodes.forEach((n) => n.drawNode(ctx));
+      const targetX = (xMin + xMax) / 2;
+      const targetY = depth * LEVEL_HEIGHT + NODE_RADIUS + 20;
+
+      const x = nodePositions.get(node)!;
+      const y = targetY;
+
+      // Draw connections first
+      if (node.left) {
+        const childX = nodePositions.get(node.left)!;
+        const childY = (depth + 1) * LEVEL_HEIGHT + NODE_RADIUS + 20;
+
+        drawLine(ctx, x, y, childX, childY);
+        drawTree(node.left, depth + 1, xMin, targetX);
+      }
+
+      if (node.right) {
+        const childX = nodePositions.get(node.right)!;
+        const childY = (depth + 1) * LEVEL_HEIGHT + NODE_RADIUS + 20;
+
+        drawLine(ctx, x, y, childX, childY);
+        drawTree(node.right, depth + 1, targetX, xMax);
+      }
+
+      // Draw node last (on top)
+      ctx.fillStyle = "#db1010ff";
+      ctx.beginPath();
+      ctx.arc(x, y, NODE_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.fillText(String(node.value), x, y);
+    };
+
+    drawTree(root, 0, NODE_RADIUS, ctx.canvas.width - NODE_RADIUS);
   };
 }

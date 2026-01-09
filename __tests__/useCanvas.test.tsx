@@ -6,6 +6,7 @@ import useCanvas from "hooks/useCanvas";
 describe("useCanvas hook", () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   let rafCallbacks: Function[];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let rafSpy: jest.SpyInstance;
   let cafSpy: jest.SpyInstance;
 
@@ -21,7 +22,7 @@ describe("useCanvas hook", () => {
 
     cafSpy = jest
       .spyOn(window, "cancelAnimationFrame")
-      .mockImplementation(() => {});
+      .mockImplementation(() => { });
   });
 
   afterEach(() => {

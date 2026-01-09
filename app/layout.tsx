@@ -31,7 +31,11 @@ export default function RootLayout({
           {children}
         </body>
       </html>
-      <footer><span>Dave Ogle 2026: (<a href="mailto:dave.ogle@pm.me">dave.ogle@pm.me</a>)</span></footer>
+      <footer>
+        <span>
+          Dave Ogle 2026: (<a href="mailto:dave.ogle@pm.me">dave.ogle@pm.me</a>)
+        </span>
+      </footer>
     </>
   );
 }
